@@ -45,5 +45,5 @@ REPEAT="repeat"
 STRING="string"
 THEN="then"
 UNTIL="until"
-VAR="var
+VAR="var"
 WHILE="while"
