@@ -1,19 +1,24 @@
 package es.willyaranda.wpl.elements;
 
-public class Identifier {
-	private String name = "";
-	private String type = "";
-	
-	public String getName() {
-		return name;
+public class Identifier extends Token {
+	/**
+	 * <code>lexeme</code> es el nombre de la variable que tenía en el código fuente
+	 * original. Por ejemplo <code><b>x</b>:=8+3</code>
+	 */
+	private String lexeme;
+
+	/**
+	 * el <code>type</code> de un identificador es <code>ID</code>
+	 */
+	public Identifier() {
+		this.type = "ID";
 	}
-	public void setName(String name) {
-		this.name = name;
+
+	public String getLexeme() {
+		return lexeme;
 	}
-	public String getType() {
-		return type;
-	}
-	public void setType(String type) {
-		this.type = type;
+
+	public void setLexeme(String lexeme) {
+		this.lexeme = lexeme;
 	}
 }
