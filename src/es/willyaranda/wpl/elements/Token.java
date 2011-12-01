@@ -7,12 +7,6 @@ public class Token {
 	 * un número * <code>RW</code> que es una palabra reservada
 	 */
 	public String type;
-
-	public String getType() {
-		return type;
-	}
-
-	public void setType(String type) {
-		this.type = type;
-	}
+	public int line;
+	public int column;
 }
