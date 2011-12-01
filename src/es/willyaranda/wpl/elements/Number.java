@@ -7,7 +7,8 @@ public class Number extends Token {
 	private long value = 0;
 
 	/**
-	 * Se inicializa su <code>type</code> como <code>NB</code>, que indica número
+	 * Se inicializa su <code>type</code> como <code>NB</code>, que indica
+	 * número
 	 */
 	public Number() {
 		this.type = "NB";
