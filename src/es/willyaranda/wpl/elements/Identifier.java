@@ -24,4 +24,9 @@ public class Identifier extends Token {
 	public void setLexeme(String lexeme) {
 		this.lexeme = lexeme;
 	}
+	
+	@Override
+	public String toString() {
+		return getLexeme();
+	}
 }

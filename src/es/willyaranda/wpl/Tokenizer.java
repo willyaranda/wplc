@@ -67,8 +67,7 @@ public class Tokenizer {
 				continue;
 			int eq = linea.indexOf("=");
 			// ReservedWord(lexeme, text);
-			ReservedWord rw = new ReservedWord(linea.substring(0, eq), 0, 0);
-			rw.setText(linea.substring(eq + 2, linea.length() - 1));
+			ReservedWord rw = new ReservedWord(linea.substring(0, eq), linea.substring(eq + 2, linea.length() - 1), 0, 0);
 			TOKENS.add(rw);
 		}
 		is.close();
@@ -87,7 +86,6 @@ public class Tokenizer {
 		/* Inicio del tokenizer como tal */
 		actualcolumn = 0;
 		sourcecode = sourcecode.concat(linea + "\n");
-		System.out.println(linea);
 		char a;
 		// Ya comprueba si el caracter es válido o no
 		while ((a = getchar()) != '$') {
@@ -101,6 +99,7 @@ public class Tokenizer {
 			else if (a == '/') {
 				if (getchar() == '/') {
 					actualline++;
+					System.out.println("Una línea de comentario");
 					return;
 				} else {
 					String string = "";
@@ -113,7 +112,7 @@ public class Tokenizer {
 				lexeme += a;
 				while (true) {
 					a = getchar();
-					if (isSymbol(a) && !Character.isWhitespace(a)) {
+					if (!isSymbol(a) && !Character.isWhitespace(a)) {
 						lexeme += a;
 					} else {
 						ungetchar();
@@ -178,14 +177,17 @@ public class Tokenizer {
 	}
 
 	private static boolean isReservedWord(String lexeme) {
-		// TODO Auto-generated method stub
+		for (ReservedWord tok: TOKENS) {
+			//System.out.println("Comparando " + lexeme + " con " + tok.getText());
+			if (tok.getText().equalsIgnoreCase(lexeme)) return true;
+		}
 		return false;
 	}
 
 	private static void emitToken(String string, String value, int actualline2,
 			int actualcolumn2) {
 		if (string == "RW") {
-			ReservedWord token = new ReservedWord(string, actualline2,
+			ReservedWord token = new ReservedWord(string, value, actualline2,
 					actualcolumn2);
 			listTokensSourceFile.add(token);
 		} else if (string == "NB") {
@@ -217,8 +219,11 @@ public class Tokenizer {
 
 	public static void printTokens() {
 		for (Token t : listTokensSourceFile) {
-			System.out.println(t.toString() + "; l=" + t.line + " c=" + t.column);
+			System.out.println(t.getClass() + " -- " + t.toString() + " --> l=" + t.line + " c=" + t.column);
 		}
 		System.out.println(sourcecode);
+		/*for (Token t : TOKENS) {
+			System.out.println(t);
+		}*/
 	}
 }
