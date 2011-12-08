@@ -15,8 +15,11 @@ public class ReservedWord extends Token {
 	/**
 	 * El <code>type</code> de una palabra reservada es <code>RW</code>
 	 */
-	public ReservedWord() {
+	public ReservedWord(String string, int linea, int column) {
 		this.type = "RW";
+		this.lexeme = string;
+		this.line = linea;
+		this.column = column;
 	}
 
 	public String getLexeme() {

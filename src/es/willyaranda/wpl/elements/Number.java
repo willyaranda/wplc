@@ -10,8 +10,11 @@ public class Number extends Token {
 	 * Se inicializa su <code>type</code> como <code>NB</code>, que indica
 	 * número
 	 */
-	public Number() {
+	public Number(long value, int linea, int column) {
 		this.type = "NB";
+		this.value = value;
+		this.line = linea;
+		this.column = column;
 	}
 
 	public long getValue() {
@@ -20,5 +23,10 @@ public class Number extends Token {
 
 	public void setValue(long value) {
 		this.value = value;
+	}
+	
+	@Override
+	public String toString() {
+		return String.valueOf(getValue());
 	}
 }

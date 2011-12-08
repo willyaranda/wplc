@@ -10,8 +10,11 @@ public class Identifier extends Token {
 	/**
 	 * el <code>type</code> de un identificador es <code>ID</code>
 	 */
-	public Identifier() {
+	public Identifier(String lexeme, int linea, int column) {
 		this.type = "ID";
+		this.lexeme = lexeme;
+		this.line = linea;
+		this.column = column;
 	}
 
 	public String getLexeme() {
