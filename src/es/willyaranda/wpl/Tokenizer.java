@@ -162,9 +162,7 @@ public class Tokenizer {
 				} else {
 					emitToken("ID", lexeme, actualline, actualcolumn);
 				}
-			}
-			// FIXME: aquí si hay número y después letra, qué? error?
-			else if (Character.isDigit(a)) {
+			} else if (Character.isDigit(a)) {
 				String value = "";
 				value += a;
 				while (true) {
