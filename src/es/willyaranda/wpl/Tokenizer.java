@@ -12,33 +12,63 @@ import es.willyaranda.wpl.excp.BadTokenException;
 
 public class Tokenizer {
 
-	static final String TOKENS_FILE = "/home/willyaranda/workspace/wpl/tokens";
-	static final String SOURCE_FILE = "/home/willyaranda/workspace/wpl/source.wpl";
+	private static final String TOKENS_FILE = "/home/willyaranda/workspace/wpl/tokens";
+	private static final String SOURCE_FILE = "/home/willyaranda/workspace/wpl/source.wpl";
 
-	static final String VALID_CHARS = "abcdefghijklmnopqrstuvwxyz"
+	private static final String VALID_CHARS = "abcdefghijklmnopqrstuvwxyz"
 			+ "ABCDEFGHIJKLMNOPQRSTUVWXYZ" + "+-/*><=:.,;:()[]{}\n\t "
 			+ "0123456789";
 
-	static public ArrayList<ReservedWord> TOKENS = new ArrayList<ReservedWord>();
+	static private ArrayList<ReservedWord> TOKENS = new ArrayList<ReservedWord>();
 
-	static public ArrayList<Token> listTokensSourceFile = new ArrayList<Token>();
+	private static ArrayList<Token> listTokensSourceFile = new ArrayList<Token>();
 
-	static String sourcecode = "";
-	static int ptr = 0;
-	static int actualline = 1;
-	static int actualcolumn;
+	private static String sourcecode = "";
+	private static int ptr = 0;
+	private static int actualline;
+	private static int actualcolumn;
 
-	public static void main(String[] args) throws Exception {
-		initializeEverything();
-		printTokens();
+	public Tokenizer() throws Exception {
+		// Inicio del parseo del fichero de configuración
+		BufferedReader is = new BufferedReader(new FileReader(TOKENS_FILE));
+		String linea;
+		while ((linea = is.readLine()) != null) {
+			if ((linea.length() == 0) || (linea.charAt(0) == '['))
+				continue;
+			int eq = linea.indexOf("=");
+			// ReservedWord(lexeme, text);
+			ReservedWord rw = new ReservedWord(linea.substring(0, eq),
+					linea.substring(eq + 2, linea.length() - 1), 0, 0);
+			TOKENS.add(rw);
+		}
+		is.close();
+
+		// Inicio del parseo del código fuente
+		BufferedReader sourcefile = new BufferedReader(new FileReader(
+				SOURCE_FILE));
+		while ((linea = sourcefile.readLine()) != null) {
+			tokenizeLine(linea);
+		}
+		sourcefile.close();
 	}
 
-	public Tokenizer() {
-		// TODO Auto-generated constructor stub
-		// Debería pasar el TOKENS_FILE Y EL SOURCE_FILE como parámetros
+	private void emitToken(String string, String value, int actualline2,
+			int actualcolumn2) {
+		if (string == "RW") {
+			ReservedWord token = new ReservedWord(string, value, actualline2,
+					actualcolumn2);
+			listTokensSourceFile.add(token);
+		} else if (string == "NB") {
+			Number token = new Number(Long.parseLong(value), actualline2,
+					actualcolumn2);
+			listTokensSourceFile.add(token);
+		} else if (string == "ID") {
+			Identifier token = new Identifier(value, actualline2, actualcolumn2);
+			listTokensSourceFile.add(token);
+		}
 	}
 
-	public static char getchar() throws Exception {
+	private char getchar() throws Exception {
 		char ch;
 		try {
 			ch = sourcecode.charAt(ptr);
@@ -53,38 +83,48 @@ public class Tokenizer {
 		return ch;
 	}
 
-	public static char ungetchar() {
-		actualcolumn--;
-		return sourcecode.charAt(--ptr);
+	private boolean isReservedWord(String lexeme) {
+		for (ReservedWord tok : TOKENS) {
+			// System.out.println("Comparando " + lexeme + " con " +
+			// tok.getText());
+			if (tok.getText().equalsIgnoreCase(lexeme))
+				return true;
+		}
+		return false;
 	}
 
-	public static void initializeEverything() throws Exception {
-		// Inicio del parseo del fichero de configuración
-		BufferedReader is = new BufferedReader(new FileReader(TOKENS_FILE));
-		String linea;
-		while ((linea = is.readLine()) != null) {
-			if ((linea.length() == 0) || (linea.charAt(0) == '['))
-				continue;
-			int eq = linea.indexOf("=");
-			// ReservedWord(lexeme, text);
-			ReservedWord rw = new ReservedWord(linea.substring(0, eq), linea.substring(eq + 2, linea.length() - 1), 0, 0);
-			TOKENS.add(rw);
-		}
-		is.close();
-
-		// Inicio del parseo del código fuente
-		BufferedReader sourcefile = new BufferedReader(new FileReader(
-				SOURCE_FILE));
-		while ((linea = sourcefile.readLine()) != null) {
-			tokenizeLine(linea);
-		}
-		sourcefile.close();
+	private boolean isSymbol(char a) {
+		final String symbols = "+-/*><=:.,;:()[]{}";
+		if (symbols.indexOf(a) != -1)
+			return true;
+		return false;
 	}
 
-	// TODO
-	public static void tokenizeLine(String linea) throws Exception {
+	private ReservedWord lookForToken(String id) throws BadTokenException {
+		int searching = 0;
+		while (TOKENS.size() <= searching++) {
+			if (TOKENS.get(searching).getText() == id) {
+				return TOKENS.get(searching);
+			}
+		}
+		throw new BadTokenException(); // :(
+	}
+
+	public void printTokens() {
+		for (Token t : listTokensSourceFile) {
+			System.out.println(t.getClass() + " -- " + t.toString() + " --> l="
+					+ t.line + " c=" + t.column);
+		}
+		System.out.println(sourcecode);
+		/*
+		 * for (Token t : TOKENS) { System.out.println(t); }
+		 */
+	}
+
+	private void tokenizeLine(String linea) throws Exception {
 		/* Inicio del tokenizer como tal */
 		actualcolumn = 0;
+		actualline += 1;
 		sourcecode = sourcecode.concat(linea + "\n");
 		char a;
 		// Ya comprueba si el caracter es válido o no
@@ -92,14 +132,12 @@ public class Tokenizer {
 			// Líneas no válidas: comentarios, vacías. Aumentamos contador de
 			// líneas
 			if (linea.length() == 0) {
-				actualline++;
 				return;
 			}
-			//Comentario
+			// Comentario
 			else if (a == '/') {
 				if (getchar() == '/') {
-					actualline++;
-					ptr += linea.length()-2;
+					ptr += linea.length() - 1;
 					return;
 				} else {
 					String string = "";
@@ -176,54 +214,8 @@ public class Tokenizer {
 		}
 	}
 
-	private static boolean isReservedWord(String lexeme) {
-		for (ReservedWord tok: TOKENS) {
-			//System.out.println("Comparando " + lexeme + " con " + tok.getText());
-			if (tok.getText().equalsIgnoreCase(lexeme)) return true;
-		}
-		return false;
-	}
-
-	private static void emitToken(String string, String value, int actualline2,
-			int actualcolumn2) {
-		if (string == "RW") {
-			ReservedWord token = new ReservedWord(string, value, actualline2,
-					actualcolumn2);
-			listTokensSourceFile.add(token);
-		} else if (string == "NB") {
-			Number token = new Number(Long.parseLong(value), actualline2,
-					actualcolumn2);
-			listTokensSourceFile.add(token);
-		} else if (string == "ID") {
-			Identifier token = new Identifier(value, actualline2, actualcolumn2);
-			listTokensSourceFile.add(token);
-		}
-	}
-
-	private static boolean isSymbol(char a) {
-		final String symbols = "+-/*><=:.,;:()[]{}";
-		if (symbols.indexOf(a) != -1)
-			return true;
-		return false;
-	}
-
-	public static ReservedWord lookForToken(String id) throws BadTokenException {
-		int searching = 0;
-		while (TOKENS.size() <= searching++) {
-			if (TOKENS.get(searching).getText() == id) {
-				return TOKENS.get(searching);
-			}
-		}
-		throw new BadTokenException(); // :(
-	}
-
-	public static void printTokens() {
-		for (Token t : listTokensSourceFile) {
-			System.out.println(t.getClass() + " -- " + t.toString() + " --> l=" + t.line + " c=" + t.column);
-		}
-		System.out.println(sourcecode);
-		/*for (Token t : TOKENS) {
-			System.out.println(t);
-		}*/
+	private char ungetchar() {
+		actualcolumn--;
+		return sourcecode.charAt(--ptr);
 	}
 }

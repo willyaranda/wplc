@@ -27,17 +27,18 @@ public class ReservedWord extends Token {
 		return lexeme;
 	}
 
-	public void setLexeme(String lexeme) {
-		this.lexeme = lexeme;
-	}
-
 	public String getText() {
 		return text;
+	}
+
+	public void setLexeme(String lexeme) {
+		this.lexeme = lexeme;
 	}
 
 	public void setText(String text) {
 		this.text = text;
 	}
+
 	@Override
 	public String toString() {
 		return getText();

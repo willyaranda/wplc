@@ -1,5 +1,8 @@
+program
+begin
 x := 2 + 3;
 
-string a = x;
-//hola!!
+string a := x;
+//hola
 f := (2*3+([8,9]*3));
+end;
