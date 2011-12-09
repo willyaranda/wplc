@@ -25,7 +25,7 @@ Además, pueden cambiarse los tokens o elementos del sistema para cambiar el idi
 Contributors
 ------------
 
-** Nobody, yet! **
+* Nobody, yet!
 
 
 TODO
