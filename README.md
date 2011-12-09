@@ -15,9 +15,13 @@ Esto es un compilador a medida para un lenguaje de programación similar a pasca
 Lo he llamado WPLC (Willy Programming Language Compiler).
 
 Escrito en Java, consta (constará) de varias partes:
-* Análisis léxico (`Tokenizer.java`)
+
+* Análisis léxico en el fichero `Tokenizer.java`
+
 * Análisis sintáctico
+
 * Análisis semántico
+
 * ClassWriter
 	
 Además, pueden cambiarse los tokens o elementos del sistema para cambiar el idioma, por ejemplo. Ver el archivo `tokens`.
