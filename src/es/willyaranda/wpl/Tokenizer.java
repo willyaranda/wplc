@@ -99,7 +99,7 @@ public class Tokenizer {
 			else if (a == '/') {
 				if (getchar() == '/') {
 					actualline++;
-					System.out.println("Una línea de comentario");
+					ptr += linea.length()-2;
 					return;
 				} else {
 					String string = "";
