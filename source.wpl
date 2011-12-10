@@ -1,10 +1,8 @@
-PROGRAM FACTORIAL;
-   VAR I, F:INTEGER;
+program
+begin
+x := 2 + 3;
 
-BEGIN
-   F:=1;
-  //comentario
-   FOR I:=1 TO N DO BEGIN
-      F:=F*I;
-   END;
-END.
+string a := x;
+//hola
+f := (2*3+([8,9]*3));
+end;
