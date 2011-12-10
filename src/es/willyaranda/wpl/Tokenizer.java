@@ -185,6 +185,7 @@ public class Tokenizer {
 						emitToken("RW", symbol, actualline, actualcolumn);
 					} else {
 						ungetchar();
+						emitToken("RW", symbol, actualline, actualcolumn);
 					}
 				} else if (a == '<') {
 					a = getchar();
@@ -193,6 +194,7 @@ public class Tokenizer {
 						emitToken("RW", symbol, actualline, actualcolumn);
 					} else {
 						ungetchar();
+						emitToken("RW", symbol, actualline, actualcolumn);
 					}
 				} else if (a == ':') {
 					a = getchar();
