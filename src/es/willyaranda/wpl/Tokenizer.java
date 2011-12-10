@@ -201,6 +201,7 @@ public class Tokenizer {
 						emitToken("RW", symbol, actualline, actualcolumn);
 					} else {
 						ungetchar();
+						emitToken("RW", symbol, actualline, actualcolumn);
 					}
 				} else {
 					emitToken("RW", symbol, actualline, actualcolumn);
