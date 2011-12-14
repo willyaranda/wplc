@@ -27,6 +27,7 @@ public class Tokenizer {
 	private static int ptr = 0;
 	private static int actualline;
 	private static int actualcolumn;
+	private int actualToken = 0;
 
 	public Tokenizer() throws Exception {
 		// Inicio del parseo del fichero de configuración
@@ -218,5 +219,23 @@ public class Tokenizer {
 	private char ungetchar() {
 		actualcolumn--;
 		return sourcecode.charAt(--ptr);
+	}
+	
+	public Token getNextToken() {
+		try {
+			listTokensSourceFile.get(actualToken+1);
+			return listTokensSourceFile.get(actualToken++);
+		} catch (IndexOutOfBoundsException e) {
+			return null;
+		}
+	}
+	
+	public Token getLookahead() {
+		try {
+			listTokensSourceFile.get(actualToken+1);
+			return listTokensSourceFile.get(actualToken+1);
+		} catch (IndexOutOfBoundsException e) {
+			return null;
+		}
 	}
 }
