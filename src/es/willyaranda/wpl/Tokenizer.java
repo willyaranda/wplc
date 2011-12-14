@@ -55,6 +55,7 @@ public class Tokenizer {
 
 	private void emitToken(String string, String value, int actualline2,
 			int actualcolumn2) {
+		System.out.println("Emitiendo '" + value + "' como " + string);
 		if (string == "RW") {
 			ReservedWord token = new ReservedWord(string, value, actualline2,
 					actualcolumn2);
@@ -86,8 +87,6 @@ public class Tokenizer {
 
 	private boolean isReservedWord(String lexeme) {
 		for (ReservedWord tok : TOKENS) {
-			// System.out.println("Comparando " + lexeme + " con " +
-			// tok.getText());
 			if (tok.getText().equalsIgnoreCase(lexeme))
 				return true;
 		}
@@ -101,25 +100,12 @@ public class Tokenizer {
 		return false;
 	}
 
-	private ReservedWord lookForToken(String id) throws BadTokenException {
-		int searching = 0;
-		while (TOKENS.size() <= searching++) {
-			if (TOKENS.get(searching).getText() == id) {
-				return TOKENS.get(searching);
-			}
-		}
-		throw new BadTokenException(); // :(
-	}
-
 	public void printTokens() {
 		for (Token t : listTokensSourceFile) {
 			System.out.println(t.getClass() + " -- " + t.toString() + " --> l="
 					+ t.line + " c=" + t.column);
 		}
 		System.out.println(sourcecode);
-		/*
-		 * for (Token t : TOKENS) { System.out.println(t); }
-		 */
 	}
 
 	private void tokenizeLine(String linea) throws Exception {
@@ -179,35 +165,29 @@ public class Tokenizer {
 			} else if (isSymbol(a)) {
 				String symbol = "";
 				symbol += a;
-				if (a == '>') {
-					a = getchar();
-					if (a == '=') {
-						symbol += a;
-						emitToken("RW", symbol, actualline, actualcolumn);
-					} else {
-						ungetchar();
-						emitToken("RW", symbol, actualline, actualcolumn);
-					}
-				} else if (a == '<') {
-					a = getchar();
-					if (a == '=') {
-						symbol += a;
-						emitToken("RW", symbol, actualline, actualcolumn);
-					} else {
-						ungetchar();
-						emitToken("RW", symbol, actualline, actualcolumn);
-					}
-				} else if (a == ':') {
-					a = getchar();
-					if (a == '=') {
-						symbol += a;
-						emitToken("RW", symbol, actualline, actualcolumn);
-					} else {
-						ungetchar();
-						emitToken("RW", symbol, actualline, actualcolumn);
-					}
-				} else {
+				while(isSymbol(a = getchar())) {
+					symbol += a;
+				}
+				//Como el último no es símbolo, ungetchar para volver
+				ungetchar();
+				if (isReservedWord(symbol)) {
 					emitToken("RW", symbol, actualline, actualcolumn);
+				} else {
+					//System.out.println("Analizando " + symbol);
+					for (int i=0; i<=symbol.length(); i++) {
+						String substring;
+						try {
+							substring = symbol.substring(i, i+2);
+						} catch (StringIndexOutOfBoundsException e) {
+							substring = symbol.substring(i, i+1);
+						}
+						if (isReservedWord(substring)) {
+							emitToken("RW", substring, actualline, actualcolumn);
+							i++;
+						} else {
+							emitToken("RW", symbol.substring(i, i+1), actualline, actualcolumn);
+						}
+					}
 				}
 			} else if (Character.isWhitespace(a)) {
 				// Do a roll-roll!
