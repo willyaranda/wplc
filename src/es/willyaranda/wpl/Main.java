@@ -1,5 +1,7 @@
 package es.willyaranda.wpl;
 
+import es.willyaranda.wpl.elements.Token;
+
 public class Main {
 
 	/**
@@ -9,7 +11,11 @@ public class Main {
 	public static void main(String[] args) throws Exception {
 		// TODO Auto-generated method stub
 		Tokenizer tokenizer = new Tokenizer();
-		tokenizer.printTokens();
+		Token a;
+		while ((a = tokenizer.getNextToken()) != null) {
+			System.out.println(a);
+		}
+		//tokenizer.printTokens();
 	}
 
 }

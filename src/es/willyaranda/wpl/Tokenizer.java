@@ -8,7 +8,6 @@ import es.willyaranda.wpl.elements.Identifier;
 import es.willyaranda.wpl.elements.Number;
 import es.willyaranda.wpl.elements.ReservedWord;
 import es.willyaranda.wpl.elements.Token;
-import es.willyaranda.wpl.excp.BadTokenException;
 
 public class Tokenizer {
 
