@@ -8,6 +8,7 @@ import es.willyaranda.wpl.elements.Identifier;
 import es.willyaranda.wpl.elements.Number;
 import es.willyaranda.wpl.elements.ReservedWord;
 import es.willyaranda.wpl.elements.Token;
+import es.willyaranda.wpl.excp.BadCharException;
 
 public class Tokenizer {
 
@@ -23,6 +24,7 @@ public class Tokenizer {
 	private static ArrayList<Token> listTokensSourceFile = new ArrayList<Token>();
 
 	private static String sourcecode = "";
+	private static String line = "";
 	private static int ptr = 0;
 	private static int actualline;
 	private static int actualcolumn;
@@ -47,6 +49,7 @@ public class Tokenizer {
 		BufferedReader sourcefile = new BufferedReader(new FileReader(
 				SOURCE_FILE));
 		while ((linea = sourcefile.readLine()) != null) {
+			line = linea;
 			tokenizeLine(linea);
 		}
 		sourcefile.close();
@@ -77,7 +80,7 @@ public class Tokenizer {
 			return '$';
 		}
 		if (VALID_CHARS.indexOf(ch) == -1) {
-			throw new Exception("El caracter leído es inválido: " + ch);
+			throw new BadCharException(ch, line, actualline, actualcolumn);
 		}
 		ptr++;
 		actualcolumn++;

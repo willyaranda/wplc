@@ -9,13 +9,12 @@ public class Main {
 	 * @throws Exception
 	 */
 	public static void main(String[] args) throws Exception {
-		// TODO Auto-generated method stub
 		Tokenizer tokenizer = new Tokenizer();
-		Token a;
+		/*Token a;
 		while ((a = tokenizer.getNextToken()) != null) {
 			System.out.println(a);
-		}
-		//tokenizer.printTokens();
+		}*/
+		Parser parser = new Parser(tokenizer);
 	}
 
 }
