@@ -10,5 +10,4 @@ public class Main {
 		Tokenizer tokenizer = new Tokenizer();
 		Parser parser = new Parser(tokenizer);
 	}
-
 }

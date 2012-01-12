@@ -17,23 +17,38 @@ public class Parser {
 		match(";");
 		varlistdef();
 		main_begin();
+		match("END");
+		match(".");
 	}
 	
 	private void main_begin() throws BadSyntaxException, IOException {
 		match("BEGIN");
 		assignlistdef();
 		if (tokenizer.getLookahead().toString().equals("FOR")) {
-			//for();
+			for_st();
 		}
 		else if (tokenizer.getLookahead().toString().equals("WHILE")) {
-			//while();
+			//while_st();
 		}
 		else if (tokenizer.getLookahead().toString().equals("IF")) {
-			//if();
+			//if_st();
 		}
 		else if (tokenizer.getLookahead().getClass().equals(es.willyaranda.wpl.elements.Identifier.class)) {
 			assignlistdef();
 		}
+	}
+	
+	private void for_st() throws BadSyntaxException, IOException {
+		match("FOR");
+		assignlistdef();
+		match("TO");
+		id();
+		match("DO");
+		match("BEGIN");
+		assignlistdef();
+		match("END");
+		match(";");
+		
 	}
 	
 	private void id() throws BadSyntaxException, IOException {
@@ -50,15 +65,33 @@ public class Parser {
 	}
 	
 	private void assignlistdef() throws BadSyntaxException, IOException {
+		assigndef();
+		if (tokenizer.getLookahead().getClass().equals(es.willyaranda.wpl.elements.Identifier.class)) {
+			//FIXME
+			//assigndef();
+			System.out.println("Hay más assigndef por ahi");
+		}
+	}
+	
+	private void assigndef() throws BadSyntaxException, IOException {
 		id();
 		match(":=");
 		statement();
-		match(";");
+		if (tokenizer.getLookahead().toString().equals(";")) {
+			match(";");
+		}
 	}
 	
 	private void statement() throws BadSyntaxException, IOException {
-		if (tokenizer.getLookahead().getClass().equals(es.willyaranda.wpl.elements.Number.class)) {
+		if (tokenizer.getLookahead().toString().equals("TO")) {
+			//Wooopwpwpwp
+		}
+		else if (tokenizer.getLookahead().getClass().equals(es.willyaranda.wpl.elements.Number.class)) {
 			match("NB");
+			statement();
+		}
+		else if (tokenizer.getLookahead().getClass().equals(es.willyaranda.wpl.elements.Identifier.class)) {
+			match("ID");
 			statement();
 		}
 		else if(tokenizer.getLookahead().toString().equals("(")) {
