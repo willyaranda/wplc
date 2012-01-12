@@ -48,7 +48,6 @@ public class Parser {
 		assignlistdef();
 		match("END");
 		match(";");
-		
 	}
 	
 	private void id() throws BadSyntaxException, IOException {
@@ -82,6 +81,7 @@ public class Parser {
 		}
 	}
 	
+	//Llamarlo expresión FIXME
 	private void statement() throws BadSyntaxException, IOException {
 		if (tokenizer.getLookahead().toString().equals("TO")) {
 			//Wooopwpwpwp
@@ -136,7 +136,7 @@ public class Parser {
 
 	private void match(String string) throws BadSyntaxException, IOException {
 		Token t = tokenizer.getNextToken();
-		System.out.println("Estudiando " + t.toString());
+		System.out.println("Estudiando " + t.toString() + " comparando con " + string);
 		if (string.equals("ID") && t.getClass().equals(es.willyaranda.wpl.elements.Identifier.class)) {
 			//ID
 		}
@@ -146,7 +146,6 @@ public class Parser {
 		else if (!string.equalsIgnoreCase(t.toString())) {
 			throw new BadSyntaxException(t, string);
 		}
-		
 	}
 
 }
