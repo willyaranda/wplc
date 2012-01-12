@@ -18,11 +18,13 @@ Escrito en Java, consta (constará) de varias partes:
 
 * Análisis léxico en el fichero `Tokenizer.java`
 
-* Análisis sintáctico
+* Análisis sintáctico `Parser.java`
 
 * Análisis semántico
 
 * ClassWriter
+
+* Main `Main.java` 
 	
 Además, pueden cambiarse los tokens o elementos del sistema para cambiar el idioma, por ejemplo. Ver el archivo `tokens`.
 
@@ -35,7 +37,6 @@ Contributors
 TODO
 ----
 
-1. Análisis sintáctico
-2. Análisis semántico
-3. ClassWriter
+1. Análisis semántico
+2. ClassWriter
 	
