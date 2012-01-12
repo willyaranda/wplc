@@ -13,7 +13,7 @@ import es.willyaranda.wpl.excp.BadCharException;
 public class Tokenizer {
 
 	private static final String TOKENS_FILE = "/home/willyaranda/workspace/wpl/tokens";
-	private static final String SOURCE_FILE = "/home/willyaranda/workspace/wpl/source.wpl";
+	public static final String SOURCE_FILE = "/home/willyaranda/workspace/wpl/source.wpl";
 
 	private static final String VALID_CHARS = "abcdefghijklmnopqrstuvwxyz"
 			+ "ABCDEFGHIJKLMNOPQRSTUVWXYZ" + "+-/*><=:.,;:()[]{}\n\t "
@@ -28,7 +28,7 @@ public class Tokenizer {
 	private static int ptr = 0;
 	private static int actualline;
 	private static int actualcolumn;
-	private int actualToken = 0;
+	private int actualToken = -1;
 
 	public Tokenizer() throws Exception {
 		// Inicio del parseo del fichero de configuración
@@ -57,7 +57,7 @@ public class Tokenizer {
 
 	private void emitToken(String string, String value, int actualline2,
 			int actualcolumn2) {
-		System.out.println("Emitiendo '" + value + "' como " + string);
+		//System.out.println("Emitiendo '" + value + "' como " + string);
 		if (string == "RW") {
 			ReservedWord token = new ReservedWord(string, value, actualline2,
 					actualcolumn2);
@@ -205,8 +205,7 @@ public class Tokenizer {
 	
 	public Token getNextToken() {
 		try {
-			listTokensSourceFile.get(actualToken+1);
-			return listTokensSourceFile.get(actualToken++);
+			return listTokensSourceFile.get(++actualToken);
 		} catch (IndexOutOfBoundsException e) {
 			return null;
 		}
@@ -214,7 +213,6 @@ public class Tokenizer {
 	
 	public Token getLookahead() {
 		try {
-			listTokensSourceFile.get(actualToken+1);
 			return listTokensSourceFile.get(actualToken+1);
 		} catch (IndexOutOfBoundsException e) {
 			return null;
