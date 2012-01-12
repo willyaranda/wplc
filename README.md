@@ -2,8 +2,8 @@ WPLC
 ====
 
 * Author:    Guillermo López (<willyaranda@gmail.com>)
-* Date:      November-December, 2011
-* Last mod.: December, 2011
+* Date:      November 11 - January 12
+* Last mod.: Jan, 2011
 * Version:   -0.0.1
 * Website:   <not-yet>
 * GitHub:    <https://github.com/willyaranda/wplc>
