@@ -16,7 +16,7 @@ public class Tokenizer {
 	public static final String SOURCE_FILE = "/home/willyaranda/workspace/wpl/source.wpl";
 
 	private static final String VALID_CHARS = "abcdefghijklmnopqrstuvwxyz"
-			+ "ABCDEFGHIJKLMNOPQRSTUVWXYZ" + "+-/*><=:.,;:()[]{}\n\t "
+			+ "ABCDEFGHIJKLMNOPQRSTUVWXYZ" + "+-/*><=:.,;:()[]{} \n\t"
 			+ "0123456789";
 
 	static private ArrayList<ReservedWord> TOKENS = new ArrayList<ReservedWord>();
@@ -57,7 +57,7 @@ public class Tokenizer {
 
 	private void emitToken(String string, String value, int actualline2,
 			int actualcolumn2) {
-		//System.out.println("Emitiendo '" + value + "' como " + string);
+		// System.out.println("Emitiendo '" + value + "' como " + string);
 		if (string == "RW") {
 			ReservedWord token = new ReservedWord(string, value, actualline2,
 					actualcolumn2);
@@ -85,6 +85,22 @@ public class Tokenizer {
 		ptr++;
 		actualcolumn++;
 		return ch;
+	}
+
+	public Token getLookahead() {
+		try {
+			return listTokensSourceFile.get(actualToken + 1);
+		} catch (IndexOutOfBoundsException e) {
+			return null;
+		}
+	}
+
+	public Token getNextToken() {
+		try {
+			return listTokensSourceFile.get(++actualToken);
+		} catch (IndexOutOfBoundsException e) {
+			return null;
+		}
 	}
 
 	private boolean isReservedWord(String lexeme) {
@@ -167,27 +183,28 @@ public class Tokenizer {
 			} else if (isSymbol(a)) {
 				String symbol = "";
 				symbol += a;
-				while(isSymbol(a = getchar())) {
+				while (isSymbol(a = getchar())) {
 					symbol += a;
 				}
-				//Como el último no es símbolo, ungetchar para volver
+				// Como el último no es símbolo, ungetchar para volver
 				ungetchar();
 				if (isReservedWord(symbol)) {
 					emitToken("RW", symbol, actualline, actualcolumn);
 				} else {
-					//System.out.println("Analizando " + symbol);
-					for (int i=0; i<=symbol.length(); i++) {
+					// System.out.println("Analizando " + symbol);
+					for (int i = 0; i <= symbol.length(); i++) {
 						String substring;
 						try {
-							substring = symbol.substring(i, i+2);
+							substring = symbol.substring(i, i + 2);
 						} catch (StringIndexOutOfBoundsException e) {
-							substring = symbol.substring(i, i+1);
+							substring = symbol.substring(i, i + 1);
 						}
 						if (isReservedWord(substring)) {
 							emitToken("RW", substring, actualline, actualcolumn);
 							i++;
 						} else {
-							emitToken("RW", symbol.substring(i, i+1), actualline, actualcolumn);
+							emitToken("RW", symbol.substring(i, i + 1),
+									actualline, actualcolumn);
 						}
 					}
 				}
@@ -201,21 +218,5 @@ public class Tokenizer {
 	private char ungetchar() {
 		actualcolumn--;
 		return sourcecode.charAt(--ptr);
-	}
-	
-	public Token getNextToken() {
-		try {
-			return listTokensSourceFile.get(++actualToken);
-		} catch (IndexOutOfBoundsException e) {
-			return null;
-		}
-	}
-	
-	public Token getLookahead() {
-		try {
-			return listTokensSourceFile.get(actualToken+1);
-		} catch (IndexOutOfBoundsException e) {
-			return null;
-		}
 	}
 }

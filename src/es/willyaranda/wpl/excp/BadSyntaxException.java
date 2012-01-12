@@ -1,7 +1,6 @@
 package es.willyaranda.wpl.excp;
 
 import java.io.BufferedReader;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 
@@ -10,9 +9,8 @@ import es.willyaranda.wpl.elements.Token;
 
 public class BadSyntaxException extends Exception {
 
-
 	private static final long serialVersionUID = -8187793067280036826L;
-	
+
 	public BadSyntaxException(Token t, String string) throws IOException {
 		int column = t.column;
 		String linea;
@@ -23,11 +21,13 @@ public class BadSyntaxException extends Exception {
 		}
 		sourcefile.close();
 		System.err.println(linea);
-		while((column--)-1 != 0) {
+		while ((column--) - 1 != 0) {
 			System.err.print('-');
 		}
 		System.err.println('^');
-		System.err.println("Hay un error sintáctico en la fila " + t.line + ", columna " + t.column);
-		System.err.println("Se esperaba " + string + " pero se encontró un " + t.toString());
+		System.err.println("Hay un error sintáctico en la fila " + t.line
+				+ ", columna " + t.column);
+		System.err.println("Se esperaba " + string + " pero se encontró un "
+				+ t.toString());
 	}
 }
