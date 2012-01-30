@@ -1,12 +1,13 @@
 PROGRAM FACTORIAL;
-   VAR I, F:INTEGER;
-   
+    VAR I, F:INTEGER;
+
+FUNCTION factorial: integer;
 BEGIN
-   F:=1;
-  //comentario
-   FOR I:=1 TO N DO BEGIN
-      F:=F*I;
-      //prueba
-      //F:=(8*(3+5)-6+8*(4+5));
-      END;
+    F:=1;
+    //comentario
+    FOR I:=1 TO N DO BEGIN
+        F:=F*I;
+        //prueba
+        F:=(8*(3+5)-(6+(8*(4+5))));
+    END;
 END.
